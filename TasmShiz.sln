@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasmShiz", "TasmShiz.csproj", "{4DB3B08C-F9AC-49E3-99DC-55DEA439FE7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fplcs", "..\..\Frameworks\FerrisLibs\Fplcs\Fplcs.csproj", "{996A6652-B8EF-4B44-B0FA-001E6D7F6E09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DB3B08C-F9AC-49E3-99DC-55DEA439FE7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB3B08C-F9AC-49E3-99DC-55DEA439FE7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB3B08C-F9AC-49E3-99DC-55DEA439FE7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB3B08C-F9AC-49E3-99DC-55DEA439FE7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{996A6652-B8EF-4B44-B0FA-001E6D7F6E09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{996A6652-B8EF-4B44-B0FA-001E6D7F6E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{996A6652-B8EF-4B44-B0FA-001E6D7F6E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{996A6652-B8EF-4B44-B0FA-001E6D7F6E09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
