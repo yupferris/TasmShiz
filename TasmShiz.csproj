@@ -46,13 +46,17 @@
     <Compile Include="Operands\Abs13B3.cs" />
     <Compile Include="Operands\Abs16.cs" />
     <Compile Include="Operands\Abs16X.cs" />
+    <Compile Include="Operands\Abs16XInd.cs" />
     <Compile Include="Operands\Abs16Y.cs" />
     <Compile Include="Operands\DpImm8.cs" />
     <Compile Include="Operands\DpImm8Bit.cs" />
     <Compile Include="Operands\DpXImm8.cs" />
+    <Compile Include="Operands\DpX.cs" />
     <Compile Include="Operands\DpXInd.cs" />
+    <Compile Include="Operands\DpYImm8.cs" />
     <Compile Include="Operands\DpYInd.cs" />
     <Compile Include="Operands\Imm8.cs" />
+    <Compile Include="Operands\Imm8Digit.cs" />
     <Compile Include="Operands\Operand.cs" />
     <Compile Include="Operands\Register.cs" />
     <Compile Include="Operands\RegisterParens.cs" />

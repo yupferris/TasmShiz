@@ -34,29 +34,32 @@ namespace TasmShiz
             return true;
         }
 
-        static string[] regIds = new[] { "a", "x", "y", "ya", "c" };
+        static string[] regIds = new[] { "a", "x", "y", "ya", "c", "sp", "psw" };
 
         void parseOperands()
         {
             do
             {
                 saveState();
-                if (tryParseRegisters() ||
-                    tryParseRegistersParens() ||
-                    tryParseImm8() ||
+                if (tryParseImm8() ||
                     tryParseRel8() ||
+                    tryParseAbs16XInd() ||
                     tryParseAbs16X() ||
                     tryParseAbs16Y() ||
                     tryParseAbs16() ||
+                    tryParseDpX() ||
                     tryParseDpXImm8() ||
+                    tryParseDpYImm8() ||
                     tryParseDpYInd() ||
                     tryParseDpXInd() ||
                     tryParseDpImm8Bit() ||
                     tryParseDpImm8() ||
-                    tryParseAbs13B3())
+                    tryParseAbs13B3() ||
+                    tryParseRegisters() ||
+                    tryParseRegistersParens() ||
+                    tryParseImm8Digit())
                     continue;
                 restoreState();
-                throw new Exception("Unrecognized operand " + prettyPrintSource(CurrentToken.Source));
             } while (Accept(TokenType.Comma));
         }
 
@@ -66,7 +69,7 @@ namespace TasmShiz
             {
                 if (tryParseString(regId))
                 {
-                    _instruction.Operands.Add(new Register(regId));
+                    _instruction.Operands.Add(new Register(regId != "psw" ? regId : "p"));
                     return true;
                 }
                 restoreState();
@@ -90,8 +93,9 @@ namespace TasmShiz
 
         bool tryParseImm8()
         {
-            if (Accept(TokenType.Hash) &&
-                tryParseChar('i'))
+            if ((Accept(TokenType.Hash) &&
+                tryParseChar('i')) ||
+                tryParseChar('u'))
             {
                 _instruction.Operands.Add(new Imm8());
                 return true;
@@ -105,6 +109,22 @@ namespace TasmShiz
             if (tryParseChar('r'))
             {
                 _instruction.Operands.Add(new Imm8());
+                return true;
+            }
+            restoreState();
+            return false;
+        }
+
+        bool tryParseAbs16XInd()
+        {
+            if (Accept(TokenType.LeftBracket) &&
+                Accept(TokenType.Bang) &&
+                tryParseChar('a') &&
+                Accept(TokenType.Plus) &&
+                tryParseChar('x') &&
+                Accept(TokenType.RightBracket))
+            {
+                _instruction.Operands.Add(new Abs16XInd());
                 return true;
             }
             restoreState();
@@ -151,6 +171,19 @@ namespace TasmShiz
             return false;
         }
 
+        bool tryParseDpX()
+        {
+            if (Accept(TokenType.LeftParen) &&
+                tryParseChar('x') &&
+                Accept(TokenType.RightParen))
+            {
+                _instruction.Operands.Add(new DpX(Accept(TokenType.Plus)));
+                return true;
+            }
+            restoreState();
+            return false;
+        }
+
         bool tryParseDpXImm8()
         {
             if (tryParseChar('d') &&
@@ -158,6 +191,19 @@ namespace TasmShiz
                 tryParseChar('x'))
             {
                 _instruction.Operands.Add(new DpXImm8());
+                return true;
+            }
+            restoreState();
+            return false;
+        }
+
+        bool tryParseDpYImm8()
+        {
+            if (tryParseChar('d') &&
+                Accept(TokenType.Plus) &&
+                tryParseChar('y'))
+            {
+                _instruction.Operands.Add(new DpYImm8());
                 return true;
             }
             restoreState();
@@ -259,6 +305,22 @@ namespace TasmShiz
             if (Accept(TokenType.Identifier) &&
                 (LastToken as Lexer.Identifier).Value.ToLower() == s)
                 return true;
+            restoreState();
+            return false;
+        }
+
+        bool tryParseImm8Digit()
+        {
+            if (tryParseString("penis") && Accept(TokenType.Period) && Accept(TokenType.Identifier))
+            {
+                var id = (LastToken as Lexer.Identifier).Value;
+                int value;
+                if (int.TryParse(id, out value) && value >= 0 && value < 16)
+                {
+                    _instruction.Operands.Add(new Imm8Digit(value));
+                    return true;
+                }
+            }
             restoreState();
             return false;
         }
