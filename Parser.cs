@@ -10,7 +10,10 @@ namespace TasmShiz
     {
         List<Lexer.Token> _tokens;
         int _tokenPos;
-        Lexer.Token _currentToken, _lastToken;
+        public Lexer.Token CurrentToken, LastToken;
+
+        int _savedTokenPos;
+        Lexer.Token _savedCurrentToken, _savedLastToken;
 
         List<Instruction> _instructions;
 
@@ -18,41 +21,41 @@ namespace TasmShiz
         {
             _tokens = new Lexer().Process(input, fileName);
             _tokenPos = 0;
-            _currentToken = _lastToken = null;
-            fetchNextToken();
+            CurrentToken = LastToken = null;
+            FetchNextToken();
 
             _instructions = new List<Instruction>();
 
             while (_tokenPos < _tokens.Count)
             {
                 if (!tryParseInstruction())
-                    throw new Exception("Expecting instruction (" + prettyPrintSource(_currentToken.Source) + ")");
+                    throw new Exception("Expecting instruction (" + prettyPrintSource(CurrentToken.Source) + ")");
             }
 
             return _instructions;
         }
 
-        void fetchNextToken()
+        public void FetchNextToken()
         {
             if (_tokenPos > _tokens.Count)
-                throw new Exception("Unexpected end of file (" + prettyPrintSource(_lastToken.Source) + ")");
-            _lastToken = _currentToken;
-            _currentToken = _tokenPos < _tokens.Count ? _tokens[_tokenPos] : null;
+                throw new Exception("Unexpected end of file (" + prettyPrintSource(LastToken.Source) + ")");
+            LastToken = CurrentToken;
+            CurrentToken = _tokenPos < _tokens.Count ? _tokens[_tokenPos] : null;
             _tokenPos++;
         }
 
-        bool accept(TokenType type)
+        public bool Accept(TokenType type)
         {
-            if (_currentToken == null || _currentToken.Type != type)
+            if (CurrentToken == null || CurrentToken.Type != type)
                 return false;
-            fetchNextToken();
+            FetchNextToken();
             return true;
         }
 
-        void expect(TokenType type)
+        public void Expect(TokenType type)
         {
-            if (!accept(type))
-                throw new Exception("Expected token type: " + type + "(" + (_currentToken != null ? prettyPrintSource(_currentToken.Source) : "") + ")");
+            if (!Accept(type))
+                throw new Exception("Expected token type: " + type + "(" + (CurrentToken != null ? prettyPrintSource(CurrentToken.Source) : "") + ")");
         }
 
         string prettyPrintSource(Lexer.Source source)
@@ -62,11 +65,25 @@ namespace TasmShiz
 
         byte parseByte()
         {
-            expect(TokenType.Identifier);
+            Expect(TokenType.Identifier);
             byte ret;
-            if (!byte.TryParse((_lastToken as Lexer.Identifier).Value, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out ret))
-                throw new Exception("Identifier wasn't a valid digit value " + prettyPrintSource(_lastToken.Source));
+            if (!byte.TryParse((LastToken as Lexer.Identifier).Value, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out ret))
+                throw new Exception("Identifier wasn't a valid digit value " + prettyPrintSource(LastToken.Source));
             return ret;
+        }
+
+        void saveState()
+        {
+            _savedTokenPos = _tokenPos;
+            _savedCurrentToken = CurrentToken;
+            _savedLastToken = LastToken;
+        }
+
+        void restoreState()
+        {
+            _tokenPos = _savedTokenPos;
+            CurrentToken = _savedCurrentToken;
+            LastToken = _savedLastToken;
         }
     }
 }

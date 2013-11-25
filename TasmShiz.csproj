@@ -44,6 +44,8 @@
     <Compile Include="Instruction.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Operands\Operand.cs" />
+    <Compile Include="Operands\Register.cs" />
+    <Compile Include="Operands\RegisterParens.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Parser.Instructions.cs" />
     <Compile Include="Program.cs" />

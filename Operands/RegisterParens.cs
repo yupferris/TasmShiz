@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TasmShiz.Operands
 {
-    abstract class Operand
+    class RegisterParens : Register
     {
-        public virtual bool Emit()
+        public RegisterParens(char value)
+            : base(value)
         {
-            throw new NotImplementedException();
         }
     }
 }
