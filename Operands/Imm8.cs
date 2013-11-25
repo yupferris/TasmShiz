@@ -10,7 +10,7 @@ namespace TasmShiz.Operands
     {
         public override string Emit()
         {
-            return "new Imm8()";
+            return "new ConstImm8()";
         }
     }
 }
