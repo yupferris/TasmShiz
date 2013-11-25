@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Instruction.cs" />
     <Compile Include="Lexer.cs" />
+    <Compile Include="Operands\Imm8.cs" />
     <Compile Include="Operands\Operand.cs" />
     <Compile Include="Operands\Register.cs" />
     <Compile Include="Operands\RegisterParens.cs" />

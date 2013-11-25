@@ -34,21 +34,38 @@ namespace TasmShiz
             return true;
         }
 
-        static char[] regIds = new[] { 'x', 'y' };
+        static char[] regIds = new[] { 'a', 'x', 'y' };
 
         void parseOperands()
         {
             do
             {
-                if (tryParseRegistersParens())
+                saveState();
+                if (tryParseRegisters() ||
+                    tryParseRegistersParens() ||
+                    tryParseImm8())
                     continue;
+                restoreState();
                 throw new Exception("Unrecognized operand " + prettyPrintSource(CurrentToken.Source));
             } while (Accept(TokenType.Comma));
         }
 
+        bool tryParseRegisters()
+        {
+            foreach (var regId in regIds)
+            {
+                if (tryParseRegister(regId))
+                {
+                    _instruction.Operands.Add(new Register(regId));
+                    return true;
+                }
+                restoreState();
+            }
+            return false;
+        }
+
         bool tryParseRegistersParens()
         {
-            saveState();
             foreach (var regId in regIds)
             {
                 if (tryParseRegisterParens(regId))
@@ -79,6 +96,18 @@ namespace TasmShiz
             var id = (LastToken as Lexer.Identifier).Value.ToLower();
             if (id.Length != 1 || id.First() != reg)
                 return false;
+            return true;
+        }
+
+        bool tryParseImm8()
+        {
+            if (!Accept(TokenType.Hash))
+                return false;
+            if (!Accept(TokenType.Identifier))
+                return false;
+            if ((LastToken as Lexer.Identifier).Value.ToLower() != "i")
+                return false;
+            _instruction.Operands.Add(new Imm8());
             return true;
         }
     }
