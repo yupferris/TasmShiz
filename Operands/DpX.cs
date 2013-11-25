@@ -17,7 +17,7 @@ namespace TasmShiz.Operands
 
         public override string Emit()
         {
-            return "regXParens";
+            return "regXParens" + (Increment ? "Inc" : "");
         }
     }
 }

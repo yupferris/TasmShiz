@@ -108,7 +108,7 @@ namespace TasmShiz
         {
             if (tryParseChar('r'))
             {
-                _instruction.Operands.Add(new Imm8());
+                _instruction.Operands.Add(new ImmRel8());
                 return true;
             }
             restoreState();

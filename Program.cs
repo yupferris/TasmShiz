@@ -22,6 +22,8 @@ namespace TasmShiz
                     {
                         foreach (var instruction in instructions)
                         {
+                            bool isCommentedOut = false;
+
                             var o = "new Instruction(\"" + instruction.Mnemonic + "\", " +
                                 "0x" + instruction.Opcode.ToString("x2");
                             if (instruction.OperandsReversed)
@@ -29,11 +31,19 @@ namespace TasmShiz
                             if (instruction.Operands.Count != 0)
                             {
                                 foreach (var operand in instruction.Operands)
+                                {
                                     o += ", " + operand.Emit();
+
+                                    if (operand is Operands.Abs13B3)
+                                        isCommentedOut = true;
+                                }
                             }
                             o += "),";
 
-                            writer.WriteLine(o);
+                            if (isCommentedOut)
+                                o = "//" + o;
+
+                            writer.WriteLine("                    " + o);
                         }
                     }
                 }

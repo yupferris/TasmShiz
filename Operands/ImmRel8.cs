@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TasmShiz.Operands
 {
-    class Abs16XInd : Operand
+    class ImmRel8 : Operand
     {
         public override string Emit()
         {
-            return "new Imm16PlusRegBrackets(regX)";
+            return "new ImmRel8()";
         }
     }
 }
