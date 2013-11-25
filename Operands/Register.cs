@@ -14,5 +14,10 @@ namespace TasmShiz.Operands
         {
             Value = value;
         }
+
+        public override string Emit()
+        {
+            return "reg" + Value.ToUpper();
+        }
     }
 }

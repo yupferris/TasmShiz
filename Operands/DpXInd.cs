@@ -8,5 +8,9 @@ namespace TasmShiz.Operands
 {
     class DpXInd : Operand
     {
+        public override string Emit()
+        {
+            return "new DpXInd()";
+        }
     }
 }

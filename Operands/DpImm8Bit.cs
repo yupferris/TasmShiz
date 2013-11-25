@@ -14,5 +14,10 @@ namespace TasmShiz.Operands
         {
             Bit = bit;
         }
+
+        public override string Emit()
+        {
+            return "new Imm8Bit(" + Bit + ")";
+        }
     }
 }

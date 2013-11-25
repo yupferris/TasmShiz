@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="derp.cs" />
     <Compile Include="Instruction.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Operands\Abs13B3.cs" />

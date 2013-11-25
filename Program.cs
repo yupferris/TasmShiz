@@ -16,24 +16,26 @@ namespace TasmShiz
                 var fileName = args[0];
                 var instructions = new Parser().Process(File.ReadAllText(fileName), fileName);
 
-                foreach (var instruction in instructions)
+                using (var output = File.OpenWrite(args[1]))
                 {
-                    var o = "new Instruction(\"" + instruction.Mnemonic + "\", " +
-                        "0x" + instruction.Opcode.ToString("x2");
-                    if (instruction.OperandsReversed)
-                        o += ", InstructionOptions.ReverseOperands";
-                    if (instruction.Operands.Count != 0)
+                    using (var writer = new StreamWriter(output))
                     {
-                        foreach (var operand in instruction.Operands)
+                        foreach (var instruction in instructions)
                         {
-                            string tmp;
-                            if (operand.Emit(out tmp))
-                                o += ", " + tmp;
+                            var o = "new Instruction(\"" + instruction.Mnemonic + "\", " +
+                                "0x" + instruction.Opcode.ToString("x2");
+                            if (instruction.OperandsReversed)
+                                o += ", InstructionOptions.ReverseOperands";
+                            if (instruction.Operands.Count != 0)
+                            {
+                                foreach (var operand in instruction.Operands)
+                                    o += ", " + operand.Emit();
+                            }
+                            o += "),";
+
+                            writer.WriteLine(o);
                         }
                     }
-                    o += "),";
-
-                    Console.WriteLine(o);
                 }
             }
             catch (Exception e)

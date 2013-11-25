@@ -8,5 +8,9 @@ namespace TasmShiz.Operands
 {
     class Abs16X : Operand
     {
+        public override string Emit()
+        {
+            return "new Imm16PlusReg(regX)";
+        }
     }
 }

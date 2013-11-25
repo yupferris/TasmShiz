@@ -14,5 +14,10 @@ namespace TasmShiz.Operands
         {
             Not = not;
         }
+
+        public override string Emit()
+        {
+            return "new Abs13Bit3(" + (Not ? "true" : "false") + ")";
+        }
     }
 }
