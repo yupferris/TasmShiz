@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace TasmShiz.Operands
 {
-    class Register : Operand
+    class Abs13B3 : Operand
     {
-        public readonly string Value;
+        public readonly bool Not;
 
-        public Register(string value)
+        public Abs13B3(bool not)
         {
-            Value = value;
+            Not = not;
         }
     }
 }

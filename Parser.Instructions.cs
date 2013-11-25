@@ -34,7 +34,7 @@ namespace TasmShiz
             return true;
         }
 
-        static char[] regIds = new[] { 'a', 'x', 'y' };
+        static string[] regIds = new[] { "a", "x", "y", "ya", "c" };
 
         void parseOperands()
         {
@@ -44,13 +44,16 @@ namespace TasmShiz
                 if (tryParseRegisters() ||
                     tryParseRegistersParens() ||
                     tryParseImm8() ||
+                    tryParseRel8() ||
                     tryParseAbs16X() ||
                     tryParseAbs16Y() ||
                     tryParseAbs16() ||
                     tryParseDpXImm8() ||
                     tryParseDpYInd() ||
                     tryParseDpXInd() ||
-                    tryParseDpImm8())
+                    tryParseDpImm8Bit() ||
+                    tryParseDpImm8() ||
+                    tryParseAbs13B3())
                     continue;
                 restoreState();
                 throw new Exception("Unrecognized operand " + prettyPrintSource(CurrentToken.Source));
@@ -61,7 +64,7 @@ namespace TasmShiz
         {
             foreach (var regId in regIds)
             {
-                if (tryParseChar(regId))
+                if (tryParseString(regId))
                 {
                     _instruction.Operands.Add(new Register(regId));
                     return true;
@@ -89,6 +92,17 @@ namespace TasmShiz
         {
             if (Accept(TokenType.Hash) &&
                 tryParseChar('i'))
+            {
+                _instruction.Operands.Add(new Imm8());
+                return true;
+            }
+            restoreState();
+            return false;
+        }
+
+        bool tryParseRel8()
+        {
+            if (tryParseChar('r'))
             {
                 _instruction.Operands.Add(new Imm8());
                 return true;
@@ -180,21 +194,47 @@ namespace TasmShiz
             return false;
         }
 
+        bool tryParseDpImm8Bit()
+        {
+            if (tryParseChar('d') && Accept(TokenType.Period))
+            {
+                _instruction.Operands.Add(new DpImm8Bit(parseByte()));
+                return true;
+            }
+            restoreState();
+            return false;
+        }
+
         bool tryParseDpImm8()
         {
-            if (tryParseChar('d'))
+            if (tryParseChar('d') || tryParseString("dd") || tryParseString("ds"))
             {
                 _instruction.Operands.Add(new DpImm8());
                 return true;
             }
+            restoreState();
             return false;
         }
 
-        bool tryParseRegisterParens(char reg)
+        bool tryParseAbs13B3()
+        {
+            bool not = Accept(TokenType.Slash);
+            if (tryParseChar('m') &&
+                Accept(TokenType.Period) &&
+                tryParseChar('b'))
+            {
+                _instruction.Operands.Add(new Abs13B3(not));
+                return true;
+            }
+            restoreState();
+            return false;
+        }
+
+        bool tryParseRegisterParens(string reg)
         {
             if (!Accept(TokenType.LeftParen))
                 return false;
-            if (!tryParseChar(reg))
+            if (!tryParseString(reg))
                 return false;
             if (!Accept(TokenType.RightParen))
                 return false;
@@ -207,8 +247,20 @@ namespace TasmShiz
                 return false;
             var id = (LastToken as Lexer.Identifier).Value.ToLower();
             if (id.Length != 1 || id.First() != c)
+            {
+                restoreState();
                 return false;
+            }
             return true;
+        }
+
+        bool tryParseString(string s)
+        {
+            if (Accept(TokenType.Identifier) &&
+                (LastToken as Lexer.Identifier).Value.ToLower() == s)
+                return true;
+            restoreState();
+            return false;
         }
     }
 }

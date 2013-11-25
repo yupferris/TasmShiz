@@ -8,7 +8,7 @@ namespace TasmShiz.Operands
 {
     class RegisterParens : Register
     {
-        public RegisterParens(char value)
+        public RegisterParens(string value)
             : base(value)
         {
         }

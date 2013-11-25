@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace TasmShiz.Operands
 {
-    class Register : Operand
+    class DpImm8Bit : Operand
     {
-        public readonly string Value;
+        public readonly int Bit;
 
-        public Register(string value)
+        public DpImm8Bit(int bit)
         {
-            Value = value;
+            Bit = bit;
         }
     }
 }

@@ -43,10 +43,12 @@
   <ItemGroup>
     <Compile Include="Instruction.cs" />
     <Compile Include="Lexer.cs" />
+    <Compile Include="Operands\Abs13B3.cs" />
     <Compile Include="Operands\Abs16.cs" />
     <Compile Include="Operands\Abs16X.cs" />
     <Compile Include="Operands\Abs16Y.cs" />
     <Compile Include="Operands\DpImm8.cs" />
+    <Compile Include="Operands\DpImm8Bit.cs" />
     <Compile Include="Operands\DpXImm8.cs" />
     <Compile Include="Operands\DpXInd.cs" />
     <Compile Include="Operands\DpYInd.cs" />
