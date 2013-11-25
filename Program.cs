@@ -14,7 +14,7 @@ namespace TasmShiz
             try
             {
                 var fileName = args[0];
-                var tokens = new Lexer().Process(File.ReadAllText(fileName), fileName);
+                var instructions = new Parser().Process(File.ReadAllText(fileName), fileName);
             }
             catch (Exception e)
             {
