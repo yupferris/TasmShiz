@@ -23,7 +23,7 @@ namespace TasmShiz
             _instruction.Opcode = parseByte();
 
             _instruction.OperandsReversed =
-                _instruction.Operands.Count != 0 &&
+                _instruction.Operands.Count == 2 &&
                 _instruction.Mnemonic != "bbc" &&
                 _instruction.Mnemonic != "bbs" &&
                 _instruction.Mnemonic != "cbne" &&

@@ -8,7 +8,7 @@ namespace TasmShiz.Operands
 {
     abstract class Operand
     {
-        public virtual bool Emit()
+        public virtual bool Emit(out string o)
         {
             throw new NotImplementedException();
         }
