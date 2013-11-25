@@ -59,5 +59,14 @@ namespace TasmShiz
         {
             return source.FileName + "[" + source.Line + ":" + source.Position + "]";
         }
+
+        byte parseByte()
+        {
+            expect(TokenType.Identifier);
+            byte ret;
+            if (!byte.TryParse((_lastToken as Lexer.Identifier).Value, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out ret))
+                throw new Exception("Identifier wasn't a valid digit value " + prettyPrintSource(_lastToken.Source));
+            return ret;
+        }
     }
 }
