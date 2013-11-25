@@ -20,31 +20,10 @@ namespace TasmShiz
                 {
                     using (var writer = new StreamWriter(output))
                     {
-                        foreach (var instruction in instructions)
-                        {
-                            bool isCommentedOut = false;
-
-                            var o = "new Instruction(\"" + instruction.Mnemonic + "\", " +
-                                "0x" + instruction.Opcode.ToString("x2");
-                            if (instruction.OperandsReversed)
-                                o += ", InstructionOptions.ReverseOperands";
-                            if (instruction.Operands.Count != 0)
-                            {
-                                foreach (var operand in instruction.Operands)
-                                {
-                                    o += ", " + operand.Emit();
-
-                                    if (operand is Operands.Abs13B3)
-                                        isCommentedOut = true;
-                                }
-                            }
-                            o += "),";
-
-                            if (isCommentedOut)
-                                o = "//" + o;
-
-                            writer.WriteLine("                    " + o);
-                        }
+                        foreach (var instruction in instructions.Where(x => x.Opcode != 0xfa))
+                            writeInstruction(instruction, writer);
+                        foreach (var instruction in instructions.Where(x => x.Opcode == 0xfa))
+                            writeInstruction(instruction, writer);
                     }
                 }
             }
@@ -52,6 +31,32 @@ namespace TasmShiz
             {
                 Console.WriteLine("ERROR: " + e.Message);
             }
+        }
+
+        static void writeInstruction(Instruction instruction, StreamWriter writer)
+        {
+            bool isCommentedOut = false;
+
+            var o = "new Instruction(\"" + instruction.Mnemonic + "\", " +
+                "0x" + instruction.Opcode.ToString("x2");
+            if (instruction.OperandsReversed)
+                o += ", InstructionOptions.ReverseOperands";
+            if (instruction.Operands.Count != 0)
+            {
+                foreach (var operand in instruction.Operands)
+                {
+                    o += ", " + operand.Emit();
+
+                    if (operand is Operands.Abs13B3)
+                        isCommentedOut = true;
+                }
+            }
+            o += "),";
+
+            if (isCommentedOut)
+                o = "//" + o;
+
+            writer.WriteLine("                    " + o);
         }
     }
 }
